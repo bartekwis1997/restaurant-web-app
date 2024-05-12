@@ -1,15 +1,16 @@
-package restaurantwebapp.model;
+package com.example.restaurantwebapp.model;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 public class Restaurant {
 
-    private final UUID id;
+    private UUID id;
     private String name;
     private final String address;
     private final RestaurantType type;
-    private Set<Meal> meals;
+    private Set<Meal> meals = new HashSet<>();
 
     public Restaurant(UUID id, String name, String address, RestaurantType type) {
         this.id = id;
@@ -26,11 +27,19 @@ public class Restaurant {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
     public String getAddress() {
         return address;
+    }
+
+    public RestaurantType getType() {
+        return type;
     }
 }

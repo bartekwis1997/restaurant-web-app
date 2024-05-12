@@ -1,10 +1,9 @@
-package restaurantwebapp.controller;
+package com.example.restaurantwebapp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.restaurantwebapp.model.Meal;
+import com.example.restaurantwebapp.model.Restaurant;
 import org.springframework.web.bind.annotation.*;
-import restaurantwebapp.model.Meal;
-import restaurantwebapp.model.Restaurant;
-import restaurantwebapp.service.RestaurantService;
+import com.example.restaurantwebapp.service.RestaurantService;
 
 import java.util.Set;
 import java.util.UUID;
@@ -14,7 +13,6 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    @Autowired
     public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
     }
@@ -29,7 +27,7 @@ public class RestaurantController {
         return restaurantService.getAllRestaurants();
     }
 
-    @PostMapping
+    @PostMapping("/addrestaurant")
     public Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
         return restaurantService.addRestaurant(restaurant);
     }
@@ -39,7 +37,7 @@ public class RestaurantController {
         return restaurantService.deleteRestaurantById(id);
     }
 
-    @PostMapping("/restaurants/{id}/meals")
+    @PostMapping("/restaurants/{restaurantId}/meals")
     public Meal addMealToRestaurant(@PathVariable UUID restaurantId, @RequestBody Meal meal) {
         return restaurantService.addMealToRestaurant(restaurantId, meal);
     }

@@ -1,11 +1,13 @@
-package restaurantwebapp.service;
+package com.example.restaurantwebapp.service;
 
-import restaurantwebapp.model.Meal;
-import restaurantwebapp.model.Restaurant;
+import com.example.restaurantwebapp.model.Meal;
+import com.example.restaurantwebapp.model.Restaurant;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Service
 public interface RestaurantService {
 
     Restaurant getRestaurantById(UUID restaurantId);

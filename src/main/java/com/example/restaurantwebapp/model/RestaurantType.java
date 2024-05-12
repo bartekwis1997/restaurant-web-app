@@ -1,4 +1,4 @@
-package restaurantwebapp.model;
+package com.example.restaurantwebapp.model;
 
 public enum RestaurantType {
 

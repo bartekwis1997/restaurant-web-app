@@ -1,23 +1,29 @@
-package restaurantwebapp.service;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import restaurantwebapp.model.Meal;
-import restaurantwebapp.model.Restaurant;
-import restaurantwebapp.model.RestaurantType;
-import restaurantwebapp.repository.RestaurantRepository;
-import restaurantwebapp.repository.RestaurantWebApplication;
-
-import java.util.*;
+package com.example.restaurantwebapp.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = RestaurantWebApplication.class)
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import com.example.restaurantwebapp.model.Meal;
+import com.example.restaurantwebapp.model.Restaurant;
+import com.example.restaurantwebapp.model.RestaurantType;
+import com.example.restaurantwebapp.repository.RestaurantRepository;
+
+import java.util.*;
+
+@SpringBootTest
 class RestaurantServiceImplTest {
 
-    private RestaurantRepository restaurantRepository;
     private RestaurantServiceImpl restaurantService;
+    private RestaurantRepository restaurantRepository;
+
+    @BeforeEach
+    void setUp() {
+        restaurantRepository = mock(RestaurantRepository.class);
+        restaurantService = new RestaurantServiceImpl(restaurantRepository);
+    }
 
     @Test
     void should_get_restaurant_by_id() {
@@ -34,7 +40,6 @@ class RestaurantServiceImplTest {
         assertEquals(restaurantId, result.getId());
     }
 
-
     @Test
     void should_get_all_restaurants() {
         //Given
@@ -44,7 +49,7 @@ class RestaurantServiceImplTest {
         when(restaurantRepository.findAll()).thenReturn(restaurants);
 
         //When
-        Set<Restaurant> result = new HashSet<>(restaurantService.getAllRestaurants());
+        Set<Restaurant> result = restaurantService.getAllRestaurants();
 
         //Then
         assertEquals(new HashSet<>(restaurants), result);
@@ -89,8 +94,7 @@ class RestaurantServiceImplTest {
     void should_add_meal_to_restaurant() {
         //Given
         var restaurantId = UUID.randomUUID();
-        UUID mealId = UUID.randomUUID();
-        Meal meal = new Meal(mealId, "Test Meal", 10.0);
+        Meal meal = new Meal("Test Meal", 10.0);
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", RestaurantType.FRENCH);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
 
@@ -99,11 +103,10 @@ class RestaurantServiceImplTest {
 
         //Then
         assertNotNull(result);
-        assertEquals(mealId, result.getId());
         assertEquals("Test Meal", result.getName());
         assertEquals(10.0, result.getPrice());
         assertEquals(1, restaurant.getMeals().size());
-        assertTrue(restaurant.getMeals().contains(meal));
+        assertTrue(restaurant.getMeals().contains(result));
     }
 
     @Test
@@ -111,8 +114,10 @@ class RestaurantServiceImplTest {
         //Given
         var restaurantId = UUID.randomUUID();
         var mealId = UUID.randomUUID();
-        Meal meal = new Meal(mealId, "Test Meal", 10.0);
+        Meal meal = new Meal("Test Meal", 10.0);
+        meal.setId(mealId);
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", RestaurantType.AMERICAN);
+        restaurant.getMeals().add(meal);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
 
         //When
@@ -124,6 +129,6 @@ class RestaurantServiceImplTest {
         assertEquals("Test Meal", result.getName());
         assertEquals(10.0, result.getPrice());
         assertEquals(0, restaurant.getMeals().size());
-        assertFalse(restaurant.getMeals().contains(meal));
+        assertFalse(restaurant.getMeals().contains(result));
     }
 }

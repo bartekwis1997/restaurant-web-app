@@ -8,7 +8,7 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -16,9 +16,17 @@ repositories {
 }
 
 dependencies {
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.4.4.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'com.google.code.gson:gson:2.9.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.2.4'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation platform('org.junit:junit-bom:5.9.1')
 }
 
 tasks.named('test') {

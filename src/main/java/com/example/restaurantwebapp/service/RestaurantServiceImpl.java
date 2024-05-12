@@ -1,10 +1,9 @@
-package restaurantwebapp.service;
+package com.example.restaurantwebapp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.restaurantwebapp.model.Meal;
+import com.example.restaurantwebapp.model.Restaurant;
+import com.example.restaurantwebapp.repository.RestaurantRepository;
 import org.springframework.stereotype.Service;
-import restaurantwebapp.model.Meal;
-import restaurantwebapp.model.Restaurant;
-import restaurantwebapp.repository.RestaurantRepository;
 
 import java.util.*;
 
@@ -13,7 +12,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    @Autowired
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
@@ -26,8 +24,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Set<Restaurant> getAllRestaurants() {
-        List<Restaurant> restaurantList = restaurantRepository.findAll();
-        return new HashSet<>(restaurantList);
+        return new HashSet<>(restaurantRepository.findAll());
     }
 
     @Override
@@ -37,30 +34,21 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant deleteRestaurantById(UUID id) {
-        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
-        if (restaurantOptional.isPresent()) {
-            Restaurant restaurant = restaurantOptional.get();
-            restaurantRepository.deleteById(id);
-            return restaurant;
-        } else {
-            throw new RuntimeException("Restaurant not found");
-        }
+        Restaurant restaurant = getRestaurantById(id);
+        restaurantRepository.deleteById(id);
+        return restaurant;
     }
 
     @Override
     public Meal addMealToRestaurant(UUID restaurantId, Meal meal) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+        Restaurant restaurant = getRestaurantById(restaurantId);
         restaurant.getMeals().add(meal);
-        restaurantRepository.save(restaurant);
         return meal;
     }
 
     @Override
     public Meal deleteMealFromRestaurant(UUID restaurantId, UUID mealId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-
+        Restaurant restaurant = getRestaurantById(restaurantId);
         Optional<Meal> mealOptional = restaurant.getMeals().stream()
                 .filter(meal -> meal.getId().equals(mealId))
                 .findFirst();
@@ -68,12 +56,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (mealOptional.isPresent()) {
             Meal deletedMeal = mealOptional.get();
             restaurant.getMeals().remove(deletedMeal);
-            restaurantRepository.save(restaurant);
             return deletedMeal;
         } else {
             throw new RuntimeException("Meal not found in the restaurant");
         }
     }
-
 
 }
