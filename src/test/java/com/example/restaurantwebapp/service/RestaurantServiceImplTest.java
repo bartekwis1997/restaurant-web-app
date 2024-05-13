@@ -21,19 +21,19 @@ class RestaurantServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        restaurantRepository = mock(RestaurantRepository.class);
         restaurantService = new RestaurantServiceImpl(restaurantRepository);
+        restaurantRepository = mock(RestaurantRepository.class);
     }
 
     @Test
     void should_get_restaurant_by_id() {
         //Given
-        var restaurantId = UUID.randomUUID();
-        var restaurant = new Restaurant(restaurantId, "Test name", "Test Address", null);
+        UUID restaurantId = UUID.randomUUID();
+        Restaurant restaurant = new Restaurant(restaurantId, "Test name", "Test Address", null);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
 
         //When
-        var result = restaurantService.getRestaurantById(restaurantId);
+        Restaurant result = restaurantService.getRestaurantById(restaurantId);
 
         //Then
         assertNotNull(result);
@@ -43,7 +43,7 @@ class RestaurantServiceImplTest {
     @Test
     void should_get_all_restaurants() {
         //Given
-        List<Restaurant> restaurants = new ArrayList<>();
+        Set<Restaurant> restaurants = new HashSet<>();
         restaurants.add(new Restaurant(UUID.randomUUID(), "Restaurant 1", "Address 1", null));
         restaurants.add(new Restaurant(UUID.randomUUID(), "Restaurant 2", "Address 2", null));
         when(restaurantRepository.findAll()).thenReturn(restaurants);
@@ -58,9 +58,9 @@ class RestaurantServiceImplTest {
     @Test
     void should_add_restaurant() {
         //Given
-        var restaurantId = UUID.randomUUID();
+        UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", null);
-        when(restaurantRepository.save(restaurant)).thenReturn(restaurant);
+        when(restaurantRepository.saveRestaurant(restaurant)).thenReturn(restaurant);
 
         //When
         Restaurant result = restaurantService.addRestaurant(restaurant);
@@ -75,7 +75,7 @@ class RestaurantServiceImplTest {
     @Test
     void should_delete_restaurant_by_given_id() {
         //Given
-        var restaurantId = UUID.randomUUID();
+        UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", null);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
 
@@ -93,7 +93,7 @@ class RestaurantServiceImplTest {
     @Test
     void should_add_meal_to_restaurant() {
         //Given
-        var restaurantId = UUID.randomUUID();
+        UUID restaurantId = UUID.randomUUID();
         Meal meal = new Meal("Test Meal", 10.0);
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", RestaurantType.FRENCH);
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
@@ -112,8 +112,8 @@ class RestaurantServiceImplTest {
     @Test
     void should_delete_meal_from_restaurant() {
         //Given
-        var restaurantId = UUID.randomUUID();
-        var mealId = UUID.randomUUID();
+        UUID restaurantId = UUID.randomUUID();
+        UUID mealId = UUID.randomUUID();
         Meal meal = new Meal("Test Meal", 10.0);
         meal.setId(mealId);
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", RestaurantType.AMERICAN);
