@@ -39,9 +39,11 @@ class RestaurantControllerIntegrationTest {
         // Given
         UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", null);
+
+        // When
         Mockito.when(restaurantService.getRestaurantById(restaurantId)).thenReturn(restaurant);
 
-        // When/Then
+        // Then
         mockMvc.perform(get("/restaurants/{id}", restaurantId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -58,9 +60,11 @@ class RestaurantControllerIntegrationTest {
         Set<Restaurant> restaurants = new HashSet<>();
         restaurants.add(new Restaurant(restaurantId1, "Restaurant 1", "Address 1", null));
         restaurants.add(new Restaurant(restaurantId2, "Restaurant 2", "Address 2", null));
+
+        // When
         Mockito.when(restaurantService.getAllRestaurants()).thenReturn(restaurants);
 
-        // When/Then
+        // Then
         mockMvc.perform(get("/restaurants"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -78,9 +82,11 @@ class RestaurantControllerIntegrationTest {
         // Given
         UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", null);
+
+        // When
         Mockito.when(restaurantService.addRestaurant(any(Restaurant.class))).thenReturn(restaurant);
 
-        // When/Then
+        // Then
         mockMvc.perform(post("/addrestaurant")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restaurant)))
@@ -96,9 +102,11 @@ class RestaurantControllerIntegrationTest {
         // Given
         UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(restaurantId, "Test Restaurant", "Test Address", null);
+
+        // When
         Mockito.when(restaurantService.deleteRestaurantById(restaurantId)).thenReturn(restaurant);
 
-        // When/Then
+        // Then
         mockMvc.perform(delete("/restaurants/{id}", restaurantId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -114,9 +122,11 @@ class RestaurantControllerIntegrationTest {
         UUID mealId = UUID.randomUUID();
         Meal meal = new Meal("Test Meal", 10.0);
         meal.setId(mealId);
+
+        // When
         Mockito.when(restaurantService.addMealToRestaurant(eq(restaurantId), any(Meal.class))).thenReturn(meal);
 
-        // When/Then
+        // Then
         mockMvc.perform(post("/restaurants/{restaurantId}/meals", restaurantId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(meal)))
@@ -134,9 +144,11 @@ class RestaurantControllerIntegrationTest {
         UUID mealId = UUID.randomUUID();
         Meal meal = new Meal("Test Meal", 10.0);
         meal.setId(mealId);
+
+        // When
         Mockito.when(restaurantService.deleteMealFromRestaurant(eq(restaurantId), eq(mealId))).thenReturn(meal);
 
-        // When/Then
+        // Then
         mockMvc.perform(delete("/restaurants/{restaurantId}/meals/{mealId}", restaurantId, mealId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
